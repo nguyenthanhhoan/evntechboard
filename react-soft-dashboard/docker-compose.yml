@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"  # Map host port 8085 to container port 80 (Nginx default)
+    volumes:
+      - ./build:/usr/share/nginx/html  # Optional: For development; remove in production if not needed
+    environment:
+      - NODE_ENV=production
+      - HTTPS=false
+      - GENERATE_SOURCEMAP=false
+      - REACT_APP_BACKEND_SERVER=http://61.28.231.218:5000/api/
+      - REACT_APP_GITHUB_OAUTH_CLIENT_ID=your-client-id  # Replace with actual ID
+      - REACT_APP_GITHUB_OAUTH_CLIENT_SECRET=your-client-secret  # Replace with actual secret
+      - REACT_APP_GITHUB_OAUTH_REDIRECT_URL=http://61.28.231.218:8085/authentication/sign-in  # Updated to match port
+    networks:
+      - web_network
+
+networks:
+  web_network:
+    driver: bridge
